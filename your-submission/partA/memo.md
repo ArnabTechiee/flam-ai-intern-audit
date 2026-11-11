@@ -26,8 +26,11 @@ English.
 3. If FLM-4B's premium is ≤2× (like o200k), keep one route and budget per language. If it's >3× on
    Dravidian languages, evaluate an Indic-tokenizer model (≈1.1–1.4×) — but route only if it
    also matches quality. Token efficiency is not quality.
-4. The premium also shrinks the effective context window and increases decode latency by the
-   same factor (Part B: decode is memory-bound, so cost scales with token count).
+4. The premium also shrinks the effective context window and raises latency by the same factor.
+5. Weight the premium by token type. On our serving stack a generated token costs ~24× the GPU
+   time of a prompt token (0.166 ms vs 4.00 ms, `partB/estimates.py`). The premium applies to both
+   sides (same tokenizer), but cost ≈ P × c_in + G × c_out with c_out ≈ 24 c_in, so budget per
+   language on *reply* tokens: a Hindi reply costs far more than a Hindi prompt of the same length.
 
 **Biggest caveat:** FLM-4B's tokenizer is unmeasured. Also, FLORES is formal text (Wikinews,
 Wikijunior, Wikivoyage) translated from English, so it has no casual, code-mixed (Hinglish) or

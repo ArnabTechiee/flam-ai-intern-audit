@@ -27,3 +27,8 @@ N, P, G, wall, rep, ttft, itl = 24, 3584, 512, 61.16, 1607.4, 0.5005, 0.09607
 print(f"\nB3 way1 (generated tokens / wall clock)        = {N*G}/{wall} = {N*G/wall:.1f} tok/s")
 print(f"B3 way2 (reported_tok_s x G/(P+G))             = {rep}*{G}/{P+G} = {rep*G/(P+G):.1f} tok/s")
 print(f"   cross-check (latency: N*G/(TTFT+G*ITL), upper bound) = {N*G/(ttft+G*itl):.1f} tok/s")
+
+# ---- B3 way 2, fully independent: latency columns only (no wall_clock, no reported_tok_s) ----
+dec, pre = G * itl, N * ttft            # decode time + total prefill time
+print(f"B3 way2' (latency columns): N*G/(G*ITL + N*TTFT) = {N*G}/({dec:.2f}+{pre:.2f}) = {N*G/(dec+pre):.1f} tok/s"
+      f"  (time budget {dec+pre:.2f} s vs logged wall {wall} s)")

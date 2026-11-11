@@ -14,3 +14,6 @@ LoRA (fwd+bwd, frozen weights) ~4N: 7,429 tok/s -> 12M-token epoch = 27 min
 
 full fine-tune ~6N (upper bound): 4,952 tok/s -> 12M-token epoch = 40 min
 vLLM generation on A100, batch 64: ~10.3 ms/step -> 6,201 tok/s -> 9M tokens in 24 min
+
+prompt token ~0.166 ms, generated token ~4.00 ms -> generated costs ~24x more
+70B-class 4-bit teacher on A100: ~27 ms/step, ~1,199 tok/s -> 9M tokens in ~2.1 h

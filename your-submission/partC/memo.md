@@ -11,38 +11,38 @@ low-resource languages we care about.
 - "Casual" means a colloquial register (natural code-mixing allowed where natives would use it),
   not new knowledge. That's a style change, which suits prompting/SFT.
 - Representative user prompts are available for evaluation.
-- No external API, so any synthetic data comes from our own model on the A100.
+- No external API, so all generation runs on the A100.
 
 **Back-of-envelope**
 - **Reviewer (binding constraint):** I timed myself on 10 blind A/B pairs (`partC/rate_timer.py`):
-  median 17.9 s per judgment (mean 26.1 s, one 83 s warm-up outlier). Those were one-line pairs;
-  real replies are ~3–5× longer, so I assume ~1 min per judgment, and real outputs are subtler, so
-  that's a lower bound. 10 h/wk × 3 wk = 30 h, ~25 h usable → ~1,500 judgments.
-  One eval round = 100 items × 2 languages ≈ 3.5 h → only ~5–6 rounds. Eval time is the bottleneck.
+  median 17.9 s per judgment (one-line pairs). Real replies are ~3–5× longer → ~1 min per judgment,
+  a lower bound. 10 h/wk × 3 wk = 30 h, ~25 h usable → ~1,500 judgments. One eval round =
+  100 items × 2 languages ≈ 3.5 h → only ~5–6 rounds. Eval time is the bottleneck.
 - **GPU (not a bottleneck):** SFT data 5k pairs × 6 langs = 30k × ~400 tokens = 12M tokens/epoch.
   LoRA ≈ 4 × 4.2B FLOPs/token → 312 TFLOPS × 40% MFU ≈ 7.4k tok/s → ≈ 27 min/epoch (full-FT 6N
-  bound: 40 min). Generating 30k replies ≈ 9M tokens ≈ 24 min with vLLM (`partB/estimates.py`).
-- **Serving cost of (c):** a style prompt with few-shot examples ≈ 600 tokens/request (more in
-  Indic, at the Part A premium) → +600 × 114,688 B ≈ 69 MB KV per sequence (Part B), about +15%
-  KV for a 4k request, so concurrency drops ~13%. SFT removes this cost; that's the reason to
-  graduate to (a).
-- **Serving cost of (b):** +1 model on every reply. A 1B fp16 model reads ~2 GB per decode step
-  → ~7–10 ms/token on an L4, so a 300-token rewrite adds ≈ 2–3 s latency.
+  bound: 40 min). Generating 9M tokens with our model ≈ 24 min (`partB/estimates.py`).
+- **A stronger data generator for (a):** a 70B-class open model at 4-bit (~35 GB) fits on the A100:
+  ~27 ms/step at batch 32 ≈ 1.2k tok/s → 9M tokens ≈ 2.1 h (`partB/estimates.py`). That removes
+  "our own too-formal model" as the data source, but not the real blocker: nobody can verify its
+  Tamil/Telugu/Bengali/Marathi output, and filtering pairs spends the same reviewer hours.
+- **Serving cost of (c):** a ~600-token style prompt → +600 × 114,688 B ≈ 69 MB KV per sequence
+  (Part B), ~+15% KV for a 4k request → ~13% less concurrency. SFT removes this; that's the
+  reason to graduate to (a).
+- **Serving cost of (b):** +1 model on every reply: ~2 GB read per token → ~2–3 s per 300-token rewrite.
 
 **Success metric:** in a blind human A/B against current outputs (n = 100 per language),
 casual-preferred win-rate **≥ 70%** for Hindi and Kannada, with replies rated "meaning changed or
-wrong" **≤ 5%** (vs baseline). At n = 100 the CI is about ±9 points, so 70% is clearly above chance.
+wrong" **≤ 5%**. At n = 100 the CI is about ±9 points, so 70% is clearly above chance.
 
 **Kill criterion:** if by **day 5** the best prompt variant has a win-rate < 60% in either language
-or a meaning-error rate > 10%, abandon prompt-only and switch to LoRA SFT, trained on reviewer-
-filtered outputs from the best prompt plus the reviewer's examples. If SFT doesn't beat the prompt
-by ≥ 10 points by **day 12**, ship the best prompt for Hindi/Kannada and stop.
+or a meaning-error rate > 10%, abandon prompt-only and switch to LoRA SFT on reviewer-filtered
+outputs (best prompt + 70B teacher). If SFT doesn't beat the prompt by ≥ 10 points by **day 12**,
+ship the best prompt for Hindi/Kannada and stop.
 
-**Day-1 experiment:** 50 real prompts × {Hindi, Kannada} × 4 conditions (current; instruction only;
-instruction + 3 reviewer-written casual examples; examples + "write like a message to a friend").
-Reviewer does a blind ranking (~2 h) while I log tokens per reply per variant. Output: does the
-model have a casual register in Kannada at all, and what does each variant cost in tokens?
+**Day-1 experiment:** 50 real prompts × {Hindi, Kannada} × 5 conditions (current; instruction only;
+instruction + 3 reviewer-written casual examples; examples + "write like a message to a friend";
+the 70B teacher casualizing the current reply). Reviewer ranks blind (~2 h) while I log tokens per
+reply. Output: does a casual register exist in Kannada at all, and what does each variant cost?
 
 **Biggest risk:** Tamil, Telugu, Bengali and Marathi can't be verified by our reviewer. An
-LLM-judge calibrated against the reviewer on Hindi/Kannada can screen them, but it isn't a
-launch gate.
+LLM-judge calibrated on Hindi/Kannada can screen them, but it isn't a launch gate.

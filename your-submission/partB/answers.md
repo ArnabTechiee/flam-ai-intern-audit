@@ -39,9 +39,12 @@ on all 13 rows. For long prompts, 3584/4096 = 87.5% of "throughput" is prompt to
 only read, not generated.
 Goodput (generated tok/s), bs24 long-prompt row:
 - Way 1 (wall clock): 24 × 512 / 61.16 s = **200.9 tok/s**
-- Way 2 (reported column): 1607.4 × 512/4096 = **200.9 tok/s**
-- Cross-check from latencies: 24×512 / (TTFT + 512×ITL) = 247.3 tok/s — an upper bound (median
-  ITL, ignores tail/scheduling), consistent with ~201.
+- Way 2 (latency columns only, independent of wall_clock and reported_tok_s): the run's time
+  budget is decode G×ITL = 512 × 0.09607 = 49.19 s plus prefill N×TTFT = 24 × 0.5005 = 12.01 s,
+  totalling 61.20 s (logged wall: 61.16 s) → 12,288 / 61.20 = **200.8 tok/s**.
+- Consistency check: reported_tok_s × G/(P+G) = 1607.4 × 512/4096 = 200.9 — this one is
+  algebraically tied to Way 1, so it confirms the column definition rather than the goodput.
+Way 2 also shows prefill isn't overlapped with decode: ~20% of the run (12 s) is spent prefilling.
 Both report conclusions fail:
 1. "Longer prompts give better throughput": at bs16, goodput short = 294.5 vs long = 163.9 tok/s.
    Long prompts are **44% worse**.

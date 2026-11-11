@@ -37,3 +37,14 @@ for name, flops_tok in [("LoRA (fwd+bwd, frozen weights) ~4N", 4 * params), ("fu
     print(f"\n{name}: {tps:,.0f} tok/s -> 12M-token epoch = {12e6/tps/60:.0f} min")
 step_ms = (2 * params + 64 * 700 * KV) / 2.0e12 * 1000 / eff   # batch 64, ~700-token contexts, 2 TB/s
 print(f"vLLM generation on A100, batch 64: ~{step_ms:.1f} ms/step -> {64/step_ms*1000:,.0f} tok/s -> 9M tokens in {9e6/(64/step_ms*1000)/60:.0f} min")
+
+# ---- cost of a prompt token vs a generated token (feeds Part A's cost weighting) ----
+per_in = t_pre / 3584 * 1000                          # ms of GPU time per prompt token
+bs24 = [r for r in rows if r["num_requests"] == "24"][0]
+per_out = float(bs24["itl_ms_p50"]) / 24              # ms per generated token at bs24
+print(f"\nprompt token ~{per_in:.3f} ms, generated token ~{per_out:.2f} ms -> generated costs ~{per_out/per_in:.0f}x more")
+
+# ---- Part C: a larger open model on the A100 as the synthetic-data teacher ----
+step = (70e9 * 0.5) / 2.0e12 * 1000 / eff             # 70B at 4-bit = 35 GB of weights, 2 TB/s
+tps = 32 / step * 1000                                # batch 32
+print(f"70B-class 4-bit teacher on A100: ~{step:.0f} ms/step, ~{tps:,.0f} tok/s -> 9M tokens in ~{9e6/tps/3600:.1f} h")
