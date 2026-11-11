@@ -232,3 +232,14 @@ Checked my own repo before pushing. Found: (1) all *_output.txt files were UTF-1
 default), unreadable on GitHub; (2) scripts pointed at "starter_kit (1)/starter_kit".
 Fixed paths, moved starter_kit to the repo root, re-ran all 7 scripts with `Out-File -Encoding utf8`.
 Result: all numbers identical (audit row 0 = 5.89; capacity = 25.7 seqs).
+
+### 20:13 — Closing gaps from a self-review
+Hypothesis: (1) B3's "two ways" were not truly independent; (2) prompt and reply tokens don't cost
+the same; (3) option (a) in Part C isn't stuck with our own model as the data generator.
+Commands: python your-submission/partB/capacity.py ; python your-submission/partB/estimates.py
+Result 1: latency columns alone: G×ITL + N×TTFT = 49.19 + 12.01 = 61.20 s vs logged wall 61.16 s
+→ goodput 200.8 tok/s, matching the wall-clock way (200.9) without using wall_clock or reported_tok_s.
+Result 2: prompt token ≈ 0.166 ms, generated token ≈ 4.00 ms of GPU time → a generated token costs ~24×
+→ added token-type weighting to the A4 memo.
+Result 3: a 70B-class 4-bit teacher fits on the A100: ~27 ms/step, ~1.2k tok/s, 9M tokens in ~2.1 h.
+Revision: still starting with (c) in Part C, since verifying, not generating, is the bottleneck.
