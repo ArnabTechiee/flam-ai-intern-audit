@@ -1,0 +1,16 @@
+﻿calibration (3584-prompt rows, no preemption):
+  N     ITL  ideal   eff   wall wall-G*ITL per req
+  4   51.33   33.9  0.66  28.98       2.70    0.67
+  8   62.26   39.7  0.64  36.30       4.42    0.55
+ 16   77.20   51.5  0.67  49.97      10.44    0.65
+ 24   96.07   63.2  0.66  61.16      11.97    0.50
+-> bandwidth efficiency 0.66, prefill ~0.59 s per 3584-token request (TTFT p50 ~0.50 s)
+
+FP8 KV: 57344 B/token, capacity 51.4 seqs -> bs48 fits (util 0.93)
+predicted ITL 96.4 ms, wall 77.9 s, goodput 315 tok/s  (measured fp16 bs48: 162 tok/s)
+caveats: ignores FP8 dequant overhead and quality loss; a prediction, falsified by one bs48 fp8 run
+
+LoRA (fwd+bwd, frozen weights) ~4N: 7,429 tok/s -> 12M-token epoch = 27 min
+
+full fine-tune ~6N (upper bound): 4,952 tok/s -> 12M-token epoch = 40 min
+vLLM generation on A100, batch 64: ~10.3 ms/step -> 6,201 tok/s -> 9M tokens in 24 min

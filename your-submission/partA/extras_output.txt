@@ -1,0 +1,14 @@
+﻿=== 1. corpus effect (gpt2, fixed metric) ===
+corpus                             per-word ratio  premium
+starter sample (10, NOT parallel)            6.11     4.78
+FLORES first 10 (parallel)                   6.28     7.96
+FLORES all 1012 (parallel)                   6.34     7.42
+parallel 10-sent draws             premium median 7.40, 90% range [6.68, 8.16]
+NON-parallel 10-sent draws         premium median 7.39, 90% range [5.64, 9.56]
+
+=== 2. NFC effect on raw FLORES ===
+lang      tokenizer    lines changed tokens raw tokens NFC  delta %
+hin_Deva  gpt2                    93     200467     200688     0.11
+hin_Deva  o200k_base              93      42276      42247    -0.07
+ben_Beng  gpt2                   609     258446     259769     0.51
+ben_Beng  o200k_base             609      45592      46011     0.92

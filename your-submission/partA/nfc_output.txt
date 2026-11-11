@@ -1,0 +1,18 @@
+﻿== hin_Deva: code points raw 131058 -> NFC 131180 (+122)
+   U+093C DEVANAGARI SIGN NUKTA                    +122
+   U+095C DEVANAGARI LETTER DDDHA                  -55
+   U+0921 DEVANAGARI LETTER DDA                    +55
+   U+091C DEVANAGARI LETTER JA                     +40
+   U+095B DEVANAGARI LETTER ZA                     -40
+   U+092B DEVANAGARI LETTER PHA                    +14
+   U+095E DEVANAGARI LETTER FA                     -14
+   U+0922 DEVANAGARI LETTER DDHA                   +9
+== ben_Beng: code points raw 129042 -> NFC 130391 (+1349)
+   U+09BC BENGALI SIGN NUKTA                       +1373
+   U+09DF BENGALI LETTER YYA                       -1225
+   U+09AF BENGALI LETTER YA                        +1225
+   U+09A1 BENGALI LETTER DDA                       +147
+   U+09DC BENGALI LETTER RRA                       -147
+   U+09C7 BENGALI VOWEL SIGN E                     -24
+   U+09BE BENGALI VOWEL SIGN AA                    -22
+   U+09CB BENGALI VOWEL SIGN O                     +22

@@ -1,0 +1,10 @@
+﻿lang       lines empty nonNFC   words graphemes    bytes
+eng_Latn    1012     0      0   21901    131966   132096
+hin_Deva    1012     0     93   25643     90733   337439
+kan_Knda    1012     0      7   16100     90371   375341
+tam_Taml    1012     0      2   16775     99724   421635
+tel_Telu    1012     0      1   16938     84771   353661
+mal_Mlym    1012     0      4   14930     95856   411741
+ben_Beng    1012     0    609   19506     89260   348729
+mar_Deva    1012     0      0   19046     89255   355511
+parallel (same line count everywhere): True

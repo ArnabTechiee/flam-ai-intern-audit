@@ -1,0 +1,22 @@
+﻿variant               eng f  hin f  ratio  eng t/c  hin t/c  ratio
+0 original            1.265  7.448   5.89    0.226    1.579   7.00
+1 split() fix         1.283  7.598   5.92    0.226    1.579   7.00
+2 no lowercase        1.229  7.448   6.06    0.220    1.579   7.19
+3 ratio of totals     1.253  7.403   5.91    0.221    1.583   7.16
+4 grapheme denom      1.265  7.448   5.89    0.226    2.363  10.47
+5 NFC removed         1.265  7.448   5.89    0.226    1.579   7.00
+6 fixes 1+2+3+4       1.231  7.525   6.11    0.214    2.354  10.98
+
+Are the corpora parallel? First 4 line pairs:
+  EN: Bengaluru International Airport handled record traffic in March.
+  HI: αñ«αÑüαñ¥αÑç αñ╕αÑüαñ¼αñ╣ αñòαÑÇ αñÜαñ╛αñ» αñ¼αñ╣αÑüαññ αñ¬αñ╕αñéαñª αñ╣αÑêαÑñ
+
+  EN: The Quarterly Review meeting moved to Thursday.
+  HI: αñ¼αÑçαñéαñùαñ▓αÑüαñ░αÑü αñ«αÑçαñé αñåαñ£ αñ╣αñ▓αÑìαñòαÑÇ αñ¼αñ╛αñ░αñ┐αñ╢ αñ╣αÑï αñ░αñ╣αÑÇ αñ╣αÑêαÑñ
+
+  EN: I bought this book yesterday from a small shop near MG Road.
+  HI: αñ»αñ╣ αñòαñ┐αññαñ╛αñ¼ αñ«αÑêαñéαñ¿αÑç αñòαñ▓ αñ╣αÑÇ αñûαñ░αÑÇαñªαÑÇ αñÑαÑÇαÑñ
+
+  EN: Children are playing cricket on the ground.
+  HI: αñ╣αñ« αñàαñùαñ▓αÑç αñ╣αñ½αñ╝αÑìαññαÑç αñ«αÑêαñ╕αÑéαñ░ αñ£αñ╛ αñ░αñ╣αÑç αñ╣αÑêαñéαÑñ
+
